@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
+SECRET_KEY = 'development key'
 
 def get_db():
     db = getattr(g, '_database', None)
@@ -39,26 +40,21 @@ def login_page():
         return redirect(url_for('main'))
 
     error = None
-    cur = get_db().cursor()
-    error = ''
-    for user in query_db('select * from Cities'):
-        error += '{}: <h1>{}</h1> <br/>'.format(user[0], user[1])
-    # if request.method == 'POST':
-    # if request.form['username'] != app.config['USERNAME']:
-    #     error = 'Invalid username'
-    # elif request.form['password'] != app.config['PASSWORD']:
-    #     error = 'Invalid password'
-    # else:
-    #     session['logged_in'] = True
-    #     # flash('You were logged in')
-    #     return redirect(url_for('main'))
+    if request.method == 'POST':
+        cur = get_db().cursor()
+        password = query_db('SELECT Password FROM Users WHERE UserName=\'{}\''.format(request.form['username']),
+                            one=True)
+
+        if password is None:
+            error = "No user with such user name"
+        elif password[0] != request.form['password']:
+            error = "password doesn't match user name"
+        else:
+            session['logged_in'] = True
+            return redirect(url_for('main'))
     return render_template('login_page.html', error=error)
 
 
-@app.route('/hello')
-def hello():
-    return render_template('main.html')
-
-
 if __name__ == '__main__':
+    app.config.from_object(__name__)
     app.run()
