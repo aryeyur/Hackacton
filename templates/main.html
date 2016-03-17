@@ -15,8 +15,10 @@
           <div class="jumbotron">
               <div class="btn-toolbar-justified" data-toggle="buttons">
                       {% for activity_id_and_name in activities_ids_and_names %}
-                        <label class="btn btn-primary btn-lg" style="width:30%;" value="{{activity_id_and_name[0]}}" onclick="window.location='{{url_for('main', activity_id_chosen=activity_id_and_name[0])}}';">
-                            <input type="radio" name="activities" id="option_{{activity_id_and_name}}" autocomplete="off" value="{{activity_id_and_name[0]}}" onclick="window.location='{{url_for('main', activity_id_chosen=activity_id_and_name[0])}}';">
+                        <label class="btn btn-primary btn-lg" style="width:30%;" value="{{activity_id_and_name[0]}}"
+                               onclick="window.location='{{url_for('main', activity_id_chosen=activity_id_and_name[0], tags_chosen=-1)}}';">
+                            <input type="radio" name="activities" id="option_{{activity_id_and_name}}"
+                                   autocomplete="off" value="{{activity_id_and_name[0]}}">
                             {{activity_id_and_name[1]}}
                         </label>
                       {% endfor %}
@@ -40,6 +42,14 @@
                             No registered users to this event yet
                         {% endfor %}
                     </p>
+                    <p>
+                        Tags: <br>
+                        {% for tag in current_event_data[7] %}
+                            {{ tag }} <br>
+                        {% else %}
+                            No Tags labeled to this event
+                        {% endfor %}
+                    </p>
                     <p><a class="btn btn-default" href="{{ url_for('register_to_event', event_id=current_event_data[6]) }}" role="button">Join &raquo;</a></p>
                     <br>
                    </div><!--/.list-group-->
@@ -57,8 +67,9 @@
               </span></h1>
             <div class="btn-group-vertical" data-toggle="buttons">
                 {% for tag in tags %}
-                <label class="btn btn-default">
-                    <input type="checkbox" autocomplete="off" checked> {{tag}}
+                <label class="btn btn-default" onclick="window.location='{{url_for('main', activity_id_chosen=session.activity_id_chosen, tags_chosen=tag[0])}}';">
+                    <input type="checkbox" autocomplete="off" onclick="window.location='{{url_for('main', activity_id_chosen=session.activity_id_chosen, tags_chosen=tag[0])}}';">
+                    {{ tag[1] }}
                 </label>
                 {% endfor %}
             </div>

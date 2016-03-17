@@ -48,8 +48,8 @@ def my_events():
 
 
 @app.route('/')
-@app.route('/<activity_id_chosen>')
-def main(activity_id_chosen=None):
+@app.route('/<activity_id_chosen>/<tags_chosen>')
+def main(activity_id_chosen=None, tags_chosen=None):
     if session.get('logged_in'):
         cur = get_db().cursor()
 
@@ -63,13 +63,29 @@ def main(activity_id_chosen=None):
         activities_ids_and_names = zip(activities_ids, activities_names)
 
         user_preferences_string = ''
-        # if request.method == 'POST':
-        #     user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
+        tags_query = ''
         tags = []
         if activity_id_chosen is not None:
             user_preferences_string = 'ActivityID = \'{}\''.format(activity_id_chosen)
-            tags = [c[0] for c in query_db('SELECT Tag FROM Tags WHERE ActivityID=\'{}\''.format(activity_id_chosen))]
+            session['activity_id_chosen'] = activity_id_chosen
+            if tags_chosen == '1' or tags_chosen == '2' or tags_chosen == '3' or tags_chosen == '4' or tags_chosen == '5' or tags_chosen == '6' or tags_chosen == '7' or tags_chosen == '8' or tags_chosen == '9' or tags_chosen == '10' or tags_chosen == '11' or tags_chosen == '12' or tags_chosen == '13' or tags_chosen == '14' or tags_chosen == '15' or tags_chosen == '16' or tags_chosen == '17' or tags_chosen == '18':
+                session['tags_chosen'].append(tags_chosen)
+
+            if len(session['tags_chosen']) != 0:
+                tags_query = ' OR '.join(['TagID = \'{}\''.format(c) for c in session['tags_chosen']])
+                tags_query = 'SELECT EventID FROM EventsTags WHERE ' + tags_query
+                tags_query = [c[0] for c in query_db(tags_query)]
+                if len(tags_query) != 0:
+                    tags_query = ['ID = \'{}\''.format(c) for c in tags_query]
+                    tags_query = ' OR '.join(tags_query)
+                    tags_query = ' AND (' +  tags_query + ')'
+                else:
+                    tags_query = ' AND 1==0'
+
+            tags = query_db('SELECT ID, Tag FROM Tags WHERE ActivityID=\'{}\''.format(activity_id_chosen))
         else:
+            session['activity_id_chosen'] = None
+            session['tags_chosen'] = []
             user_preferences_strings = []
             for preference in activities_ids:
                 user_preferences_strings.append('ActivityID = \'{}\''.format(preference))
@@ -77,7 +93,7 @@ def main(activity_id_chosen=None):
 
         events_data = []
 
-        events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
+        events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string + tags_query)
         events_ids = [event[0] for event in events]
         for i in range(len(events)):
             current_users_ids = [c[0] for c in query_db(
@@ -87,6 +103,10 @@ def main(activity_id_chosen=None):
                 current_users.append(
                     query_db('SELECT UserName from Users WHERE ID=\'{}\''.format(current_user_id), one=True)[0])
 
+            event_tags_ids = [c[0] for c in
+                              query_db('SELECT TagID FROM EventsTags WHERE EventID=\'{}\''.format(events_ids[i]))]
+            event_tags = [query_db('SELECT Tag from Tags WHERE ID=\'{}\''.format(c))[0][0] for c in event_tags_ids]
+
             event_id = events[i][0]
             city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(events[i][1]), one=True)[0]
             specific_location = events[i][2]
@@ -94,7 +114,8 @@ def main(activity_id_chosen=None):
             max_registers = events[i][4]
             activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(events[i][5]), one=True)[0]
 
-            events_data.append((city_name, specific_location, date, max_registers, activity, current_users, event_id))
+            events_data.append(
+                (city_name, specific_location, date, max_registers, activity, current_users, event_id, event_tags))
 
         return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names,
                                tags=tags)
