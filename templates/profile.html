@@ -1,0 +1,63 @@
+{% extends "header.html" %}
+
+
+{% block body %}
+
+<div class="container">
+      <div class="row">
+        <div class="span8 toppad" >
+          <div class="panel panel-info">
+            <!-- <div class="panel-heading">
+              <h3 class="panel-title">{{user[0][1]}}</h3>
+            </div> -->
+            <div class="panel-body">
+              <div class="row">
+                {% if user[0][5]== "True" %}
+                  <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="/static/images/female_avatar.png" class="img-circle img-responsive"> </div>
+                {% else %}
+                  <div class="col-md-3 col-lg-3 " align="center"> <img alt="User Pic" src="/static/images/male_avatar.png" class="img-circle img-responsive"> </div>
+                {% endif %}
+
+                <div class=" col-md-9 col-lg-9 ">
+                  <table class="table table-user-information">
+                    <tbody>
+                      <h1>{{user[0][1]}}</h1>
+                      <tr>
+                        <td>Name</td>
+                        <td>{{user[0][1]}}</td>
+                      </tr>
+                      <tr>
+                        <td>Age</td>
+                        <td>Need to calculate age from date of birth</td>
+                      </tr>
+                      <tr>
+                        <td>Gender</td>
+                        <td>{% if user[0][5]== "True" %}
+                                Female
+                            {% else %}
+                                Male
+                            {% endif %}
+                        </td>
+                      </tr>
+
+
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+            </div>
+                 <div class="panel-footer">
+                        <a href="mailto:{{user[0][6]}}" data-original-title="Contact" data-toggle="tooltip" type="button" class="btn btn-sm btn-primary"><i class="glyphicon glyphicon-envelope"></i></a>
+                        <span class="pull-right">
+                            <a href="edit.html" data-original-title="Edit Profile" data-toggle="tooltip" type="button" class="btn btn-sm btn-warning"><i class="glyphicon glyphicon-edit"></i></a>
+                            <a data-original-title="Delete Profile" data-toggle="tooltip" type="button" class="btn btn-sm btn-danger"><i class="glyphicon glyphicon-remove"></i></a>
+                        </span>
+                    </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+{% endblock %}

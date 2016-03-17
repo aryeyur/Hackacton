@@ -55,6 +55,11 @@ def login_page():
     return render_template('login_page.html', error=error)
 
 
+@app.route('/hello')
+def hello():
+    return render_template('main.html')
+
+
 if __name__ == '__main__':
     app.config.from_object(__name__)
     app.run()
