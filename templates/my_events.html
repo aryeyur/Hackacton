@@ -1,0 +1,65 @@
+{% extends "header.html" %}
+
+
+{% block body %}
+<div class="row">
+    <div class="col-lg-2"></div>
+    <div class="col-lg-8">
+        <h1>My Events</h1>
+        <br/>
+        <ul class="list-group">
+            {% for current_event_data in events_data %}
+                {% if current_event_data[5]== "True" %}
+                <li class="list-group-item">
+                    <a href="#" class="badge">edit</a>
+
+                    <div class="list-group">
+                        <h2>{{current_event_data[4]}}</h2>
+
+                        <p>
+                            City: {{current_event_data[0]}} <br>
+                            Specific Location: {{current_event_data[1]}} <br>
+                            Date: {{current_event_data[2]}} <br>
+                            Registered limit: {{current_event_data[3]}}
+                        </p>
+                        <br>
+                    </div>
+                    <!--/.list-group-->
+                </li>
+                {% else %}
+                <li class="list-group-item">
+
+                    <div class="list-group">
+                        <h2>{{current_event_data[4]}}</h2>
+
+                        <p>
+                            City: {{current_event_data[0]}} <br>
+                            Specific Location: {{current_event_data[1]}} <br>
+                            Date: {{current_event_data[2]}} <br>
+                            Registered limit: {{current_event_data[3]}}
+                        </p>
+                        <br>
+                    </div>
+                    <!--/.list-group-->
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="col-lg-2"></div>
+</div>
+
+
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+      integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css"
+      integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+{% endblock %}
