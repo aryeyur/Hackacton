@@ -38,11 +38,11 @@ def login_page():
     if session.get('logged_in'):
         return redirect(url_for('main'))
 
-    error = None
-    cur = get_db().cursor()
-    error = ''
-    for user in query_db('select * from Cities'):
-        error += '{}: <h1>{}</h1> <br/>'.format(user[0], user[1])
+    # error = None
+    # cur = get_db().cursor()
+    # error = ''
+    # for user in query_db('select * from Cities'):
+    #     error += '{}: <h1>{}</h1> <br/>'.format(user[0], user[1])
     # if request.method == 'POST':
     # if request.form['username'] != app.config['USERNAME']:
     #     error = 'Invalid username'
@@ -52,12 +52,14 @@ def login_page():
     #     session['logged_in'] = True
     #     # flash('You were logged in')
     #     return redirect(url_for('main'))
-    return render_template('login_page.html', error=error)
+    return render_template('login_page.html')
 
 
-@app.route('/hello')
-def hello():
-    return render_template('main.html')
+@app.route('/profile')
+def profile():
+    # TODO Get username from session
+    user = query_db('SELECT * FROM Users WHERE UserName=\"max\"')
+    return render_template('profile.html', user=user)
 
 
 if __name__ == '__main__':
