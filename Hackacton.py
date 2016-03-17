@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 SECRET_KEY = 'development key'
 
+
 def get_db():
     db = getattr(g, '_database', None)
     if db is None:
@@ -29,21 +30,32 @@ def close_connection(exception):
 @app.route('/')
 def main():
     if session.get('logged_in'):
-        return render_template('main.html')
+        cur = get_db().cursor()
+        user_preferences_strings = []
+
+        for preference in query_db(
+                'SELECT ActivityID FROM FaveActivities WHERE UserID=\'{}\''.format(session.get('user_id'))):
+            user_preferences_strings.append('ActivityID = \'{}\''.format(preference[0]))
+
+        user_preferences_string = ' OR '.join(user_preferences_strings)
+
+        events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
+
+        return render_template('main.html', events=events)
     else:
         return redirect(url_for('login_page'))
 
 
 @app.route('/register_success', methods=['POST'])
 def register_success_handler():
-    name  = '\'' + request.form['Name'] + '\''
-    user_name ='\'' + request.form['Username'] + '\''
+    name = '\'' + request.form['Name'] + '\''
+    user_name = '\'' + request.form['Username'] + '\''
     password = '\'' + request.form['Password'] + '\''
     date_of_birth = '\'' + request.form['date_of_birth'] + '\''
     gender = '\'' + request.form['Gender'] + '\''
     email = '\'' + request.form['email'] + '\''
     phone = '\'' + request.form['Phone Number'] + '\''
-    args = ','.join([name, user_name, password, date_of_birth, gender,email, phone])
+    args = ','.join([name, user_name, password, date_of_birth, gender, email, phone])
     query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
     query_db2(query)
     select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
@@ -74,8 +86,6 @@ def login_page():
     error = None
     if request.method == 'POST':
         cur = get_db().cursor()
-        temp_str = 'SELECT Password FROM Users WHERE UserName=\'{}\''.format(request.form['username'])
-
         password = query_db('SELECT Password FROM Users WHERE UserName=\'{}\''.format(request.form['username']),
                             one=True)
 
@@ -86,6 +96,8 @@ def login_page():
         else:
             session['logged_in'] = True
             session['username'] = request.form['username']
+            session['user_id'] = \
+                query_db('SELECT ID FROM Users WHERE UserName=\'{}\''.format(request.form['username']), one=True)[0]
             return redirect(url_for('main'))
     return render_template('login_page.html', error=error)
 
