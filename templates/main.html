@@ -26,25 +26,29 @@
               </div>
           </div>
           <div class="row">
-            <div class="list-group">
-                {{ events }}
-              <h2>Event</h2>
-              <p>Event Details Here. </p>
-              <p><a class="btn btn-default" href="#" role="button">Join &raquo;</a></p>
-              <br>
-            </div><!--/.list-group-->
-            <div class="list-group">
-              <h2>Event</h2>
-              <p>Event Details Here. </p>
-              <p><a class="btn btn-default" href="#" role="button">Join &raquo;</a></p>
-              <br>
-            </div><!--/.list-group-->
-            <div class="list-group">
-              <h2>Event</h2>
-              <p>Event Details Here. </p>
-              <p><a class="btn btn-default" href="#" role="button">Join &raquo;</a></p>
-              <br>
-            </div><!--/.list-group-->
+              {% for current_event_data in events_data %}
+                   <div class="list-group">
+                    <h2>{{current_event_data[4]}}</h2>
+                    <p>
+                        City: {{current_event_data[0]}} <br>
+                        Specific Location: {{current_event_data[1]}} <br>
+                        Date: {{current_event_data[2]}} <br>
+                        Registered limit: {{current_event_data[3]}}
+                    </p>
+                    <p>
+                        Registered Users: <br>
+                        {% for user in current_event_data[5] %}
+                            user
+                        {% endfor %}
+                    </p>
+                    <p><a class="btn btn-default" href="#" role="button">Join &raquo;</a></p>
+                    <br>
+                   </div><!--/.list-group-->
+              {% else %}
+                   <div class="list-group">
+                      <h2>No events</h2>
+                   </div><!--/.list-group-->
+              {% endfor %}
           </div><!--/row-->
         </div><!--/.col-xs-12.col-sm-9-->
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">

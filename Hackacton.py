@@ -44,7 +44,26 @@ def main():
 
         events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
 
-        return render_template('main.html', events=events)
+        events_data = []
+
+        events_ids = [event[0] for event in events]
+        for i in range(len(events)):
+            current_users_ids = [c[0] for c in query_db(
+                'SELECT UserID FROM Registrations WHERE EventID=\'{}\''.format(events_ids[i]))]
+            current_users = []
+            for current_user_id in current_users_ids:
+                current_users.append(
+                    query_db('SELECT UserName from Users WHERE ID=\'{}\''.format(current_user_id), one=True)[0])
+
+            city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(events[i][1]), one=True)[0]
+            specific_location = events[i][2]
+            date = events[i][3]
+            max_registers = events[i][4]
+            activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(events[i][5]), one=True)[0]
+
+            events_data.append((city_name, specific_location, date, max_registers, activity, current_users))
+
+        return render_template('main.html', events_data=events_data)
     else:
         return redirect(url_for('login_page'))
 
@@ -86,8 +105,9 @@ def insert_city(city_id,user_id):
 
 def query_db2(query, args=(), one=False):
     db = get_db()
-    db.execute(query,args)
+    db.execute(query, args)
     db.commit()
+
 
 @app.route('/login_page', methods=['GET', 'POST'])
 def login_page():
