@@ -59,7 +59,12 @@ def login_page():
 def profile():
     # TODO Get username from session
     user = query_db('SELECT * FROM Users WHERE UserName=\"max\"')
-    return render_template('profile.html', user=user)
+    sports_ids = query_db('SELECT * FROM FaveActivities WHERE UserID=\"1\"')
+    activities = []
+    for id in sports_ids:
+        # Get the activities names according to their ids.
+        activities.append(query_db('SELECT Name FROM Activities WHERE ID=\'{}\''.format(id[2]))[0][0])
+    return render_template('profile.html', user=user, activities=activities)
 
 
 if __name__ == '__main__':
