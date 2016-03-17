@@ -20,7 +20,6 @@
                             <input type="radio" name="activities" id="option_{{activity_id_and_name}}" autocomplete="off"
                                    value="{{activity_id_and_name[0]}}" onclick="document.forms['form1'].submit();">
                             {{activity_id_and_name[1]}}
-
                       {% endfor %}
               </div>
           </form>
@@ -38,10 +37,12 @@
                     <p>
                         Registered Users: <br>
                         {% for user in current_event_data[5] %}
-                            user
+                            {{user}} <br>
+                        {% else %}
+                            No registered users to this event yet
                         {% endfor %}
                     </p>
-                    <p><a class="btn btn-default" href="#" role="button">Join &raquo;</a></p>
+                    <p><a class="btn btn-default" href="{{ url_for('register_to_event', event_id=current_event_data[6]) }}" role="button">Join &raquo;</a></p>
                     <br>
                    </div><!--/.list-group-->
               {% else %}
