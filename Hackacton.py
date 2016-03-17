@@ -48,18 +48,20 @@ def main():
 
 @app.route('/register_success', methods=['POST'])
 def register_success_handler():
-    name = '\'' + request.form['Name'] + '\''
-    user_name = '\'' + request.form['Username'] + '\''
+    name  = '\'' + request.form['Name'] + '\''
+    user_name ='\'' + request.form['Username'] + '\''
     password = '\'' + request.form['Password'] + '\''
     date_of_birth = '\'' + request.form['date_of_birth'] + '\''
     gender = '\'' + request.form['Gender'] + '\''
     email = '\'' + request.form['email'] + '\''
     phone = '\'' + request.form['Phone Number'] + '\''
-    args = ','.join([name, user_name, password, date_of_birth, gender, email, phone])
+    city = '\'' + request.form['favourite_cities'] + '\''
+    args = ','.join([name, user_name, password, date_of_birth, gender,email, phone])
     query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
     query_db2(query)
     select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
     user_id = query_db(select_user_query)[0][0]
+    insert_city(city,user_id)
     insert_activity('1',user_id) if request.form.get('running')=='on'else None # should return 'on'
     insert_activity('2',user_id) if request.form.get('walking') == 'on' else None
     insert_activity('3',user_id) if request.form.get('basketball')== 'on' else None
@@ -72,6 +74,12 @@ def insert_activity(activity_id, user_id):
     args = ','.join([str(user_id),activity_id])
     query = 'INSERT INTO FaveActivities (UserID, ActivityID) VALUES ({})'.format(args)
     query_db2(query)
+
+def insert_city(city_id,user_id):
+    args = ','.join([str(user_id),str(city_id)])
+    query = 'INSERT INTO RelevantCities (UserID, CityID) VALUES ({})'.format(args)
+    query_db2(query)
+
 
 def query_db2(query, args=(), one=False):
     db = get_db()
