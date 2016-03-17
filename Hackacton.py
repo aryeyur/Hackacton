@@ -118,7 +118,7 @@ def register_success_handler():
     select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
     user_id = query_db(select_user_query)[0][0]
     insert_city(city, user_id)
-    insert_activity('1', user_id) if request.form.get('running') == 'on'else None  # should return 'on'
+    insert_activity('1', user_id) if request.form.get('running') == 'on' else None  # should return 'on'
     insert_activity('2', user_id) if request.form.get('walking') == 'on' else None
     insert_activity('3', user_id) if request.form.get('basketball') == 'on' else None
     insert_activity('4', user_id) if request.form.get('soccer') == 'on' else None
@@ -199,8 +199,8 @@ def create_event():
     #     return redirect(url_for('login_page'))
 
 
-@app.route('/event_success', methods=['POST'])
-def event_success():
+@app.route('/event_tags', methods=['POST'])
+def event_tags():
     if session.get('logged_in'):
         # Create the event
         activity = '\'' + request.form['activity'] + '\''
@@ -219,8 +219,27 @@ def event_success():
         args = ','.join([str(user_id), str(event_id), '1'])
         query = 'INSERT INTO Registrations (UserID, EventID, Creator) VALUES ({})'.format(args)
         query_db_no_return_value(query)
-        return render_template('event_success.html')
 
+        # Get relevant tags fot the activity type
+        tags = query_db('SELECT * FROM Tags WHERE ActivityID={}'.format(activity))
+        return render_template('event_tags.html', tags=tags, num_tags=len(tags), event_id=event_id)
+
+    else:
+        return redirect(url_for('login_page'))
+
+
+@app.route('/event_success', methods=['GET', 'POST'])
+def event_success():
+    if session.get('logged_in'):
+
+        event_id = request.form['event_id']
+        checked_tags = request.form.getlist('checked_tags')
+        #add event tags to DB
+        for tag in checked_tags:
+            args = ','.join([str(event_id), str(tag)])
+            query = 'INSERT INTO EventsTags (EventID, TagID) VALUES ({})'.format(args)
+            query_db_no_return_value(query)
+        return render_template('event_success.html')
     else:
         return redirect(url_for('login_page'))
 
