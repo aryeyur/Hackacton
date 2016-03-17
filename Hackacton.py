@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-SECRET_KEY = 'development key'
+SECRET_KEY = 'development key222'
 
 
 def get_db():
@@ -168,7 +168,7 @@ def logout():
     return redirect(url_for('login_page'))
 
 
-@app.route('/createEvent')
+@app.route('/create_event')
 def create_event():
     # if session.get('logged_in'):
     return render_template('create_event.html')
@@ -187,12 +187,14 @@ def event_success():
         time = request.form['time']
         max_part = '\'' + request.form['max_part'] + '\''
         user_id = session.get('user_id')
-        return render_template('event_success.html')
-
-        #args = ','.join([city_id, location, ])
         date_time = "\'{} {}\'".format(date, time+':00')
         args = ','.join([city_id, location, date_time, max_part, activity])
         query = 'INSERT INTO Events (CityID, Location, DateAndTime, MaxRegisters, ActivityID) VALUES ({})'.format(args)
+        query_db2(query)
+        event_id = query_db('SELECT ID FROM Events ORDER BY ID DESC LIMIT 1')
+        # Add user as creator and participant
+        args = ','.join([user_id, event_id])
+        query = 'INSERT INTO Registrations (UserID, EventID) VALUES ({})'.format(args)
         query_db2(query)
         return render_template('event_success.html')
 
