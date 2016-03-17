@@ -13,16 +13,14 @@
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
           <div class="jumbotron">
-          <form action="{{ url_for('main') }}" id="form1" method="post">
               <div class="btn-toolbar-justified" data-toggle="buttons">
                       {% for activity_id_and_name in activities_ids_and_names %}
-                        <!--<label class="btn btn-primary btn-lg" style="width:30%;"></label>-->
-                            <input type="radio" name="activities" id="option_{{activity_id_and_name}}" autocomplete="off"
-                                   value="{{activity_id_and_name[0]}}" onclick="document.forms['form1'].submit();">
+                        <label class="btn btn-primary btn-lg" style="width:30%;" value="{{activity_id_and_name[0]}}" onclick="window.location='{{url_for('main', activity_id_chosen=activity_id_and_name[0])}}';">
+                            <input type="radio" name="activities" id="option_{{activity_id_and_name}}" autocomplete="off" value="{{activity_id_and_name[0]}}" onclick="window.location='{{url_for('main', activity_id_chosen=activity_id_and_name[0])}}';">
                             {{activity_id_and_name[1]}}
+                        </label>
                       {% endfor %}
               </div>
-          </form>
           </div>
           <div class="row">
               {% for current_event_data in events_data %}
@@ -58,15 +56,11 @@
                 Choose Tags
               </span></h1>
             <div class="btn-group-vertical" data-toggle="buttons">
-              <label class="btn btn-default">
-                <input type="checkbox" autocomplete="off" checked> Checkbox 1 (pre-checked)
-              </label>
-              <label class="btn btn-default">
-                <input type="checkbox" autocomplete="off"> Checkbox 2
-              </label>
-              <label class="btn btn-default">
-                <input type="checkbox" autocomplete="off"> Checkbox 3
-              </label>
+                {% for tag in tags %}
+                <label class="btn btn-default">
+                    <input type="checkbox" autocomplete="off" checked> {{tag}}
+                </label>
+                {% endfor %}
             </div>
             </center>
         </div><!--/.sidebar-offcanvas-->

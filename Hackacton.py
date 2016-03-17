@@ -31,6 +31,7 @@ def close_connection(exception):
 def register():
     return render_template('register_page.html')
 
+
 @app.route('/my_events')
 def my_events():
     events_data = []
@@ -46,8 +47,9 @@ def my_events():
     return render_template('my_events.html', events_data=events_data)
 
 
-@app.route('/', methods=['GET', 'POST'])
-def main():
+@app.route('/')
+@app.route('/<activity_id_chosen>')
+def main(activity_id_chosen=None):
     if session.get('logged_in'):
         cur = get_db().cursor()
 
@@ -61,8 +63,12 @@ def main():
         activities_ids_and_names = zip(activities_ids, activities_names)
 
         user_preferences_string = ''
-        if request.method == 'POST':
-            user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
+        # if request.method == 'POST':
+        #     user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
+        tags = []
+        if activity_id_chosen is not None:
+            user_preferences_string = 'ActivityID = \'{}\''.format(activity_id_chosen)
+            tags = [c[0] for c in query_db('SELECT Tag FROM Tags WHERE ActivityID=\'{}\''.format(activity_id_chosen))]
         else:
             user_preferences_strings = []
             for preference in activities_ids:
@@ -90,7 +96,8 @@ def main():
 
             events_data.append((city_name, specific_location, date, max_registers, activity, current_users, event_id))
 
-        return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names)
+        return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names,
+                               tags=tags)
     else:
         return redirect(url_for('login_page'))
 
