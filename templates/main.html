@@ -13,17 +13,17 @@
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
           <div class="jumbotron">
+          <form action="{{ url_for('main') }}" id="form1" method="post">
               <div class="btn-toolbar-justified" data-toggle="buttons">
-                  <form action="{{ url_for('main') }}" method="post">
-                      {% for activity_name in activities_names %}
-                      <label class="btn btn-primary btn-lg" style="width:30%;">
-                        <input type="radio" name="options" id="option_{{activity_name}}" autocomplete="off"
-                               value="{{activity_name}}" onclick="this.form.submit()">
-                        {{activity_name}}
-                      </label>
+                      {% for activity_id_and_name in activities_ids_and_names %}
+                        <!--<label class="btn btn-primary btn-lg" style="width:30%;"></label>-->
+                            <input type="radio" name="activities" id="option_{{activity_id_and_name}}" autocomplete="off"
+                                   value="{{activity_id_and_name[0]}}" onclick="document.forms['form1'].submit();">
+                            {{activity_id_and_name[1]}}
+
                       {% endfor %}
-                  </form>
               </div>
+          </form>
           </div>
           <div class="row">
               {% for current_event_data in events_data %}

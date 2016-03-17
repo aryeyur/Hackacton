@@ -32,31 +32,32 @@ def register():
     return render_template('register_page.html')
 
 
-@app.route('/')
+@app.route('/', methods=['GET', 'POST'])
 def main():
     if session.get('logged_in'):
         cur = get_db().cursor()
 
         activities_ids = query_db(
             'SELECT ActivityID FROM FaveActivities WHERE UserID=\'{}\''.format(session.get('user_id')))
+        activities_ids = [activity_id[0] for activity_id in activities_ids]
 
         activities_names = [
-            query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(current_activity_id[0]), one=True)[0] for
+            query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(current_activity_id), one=True)[0] for
             current_activity_id in activities_ids]
+        activities_ids_and_names = zip(activities_ids, activities_names)
 
         user_preferences_string = ''
         if request.method == 'POST':
-            user_preferences_string = 'ActivityID = \'{}\''.format()
+            user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
         else:
             user_preferences_strings = []
             for preference in activities_ids:
-                user_preferences_strings.append('ActivityID = \'{}\''.format(preference[0]))
+                user_preferences_strings.append('ActivityID = \'{}\''.format(preference))
             user_preferences_string = ' OR '.join(user_preferences_strings)
-
-        events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
 
         events_data = []
 
+        events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
         events_ids = [event[0] for event in events]
         for i in range(len(events)):
             current_users_ids = [c[0] for c in query_db(
@@ -74,7 +75,7 @@ def main():
 
             events_data.append((city_name, specific_location, date, max_registers, activity, current_users))
 
-        return render_template('main.html', events_data=events_data, activities_names=activities_names)
+        return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names)
     else:
         return redirect(url_for('login_page'))
 
