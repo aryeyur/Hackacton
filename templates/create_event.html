@@ -18,13 +18,13 @@
     <div class="row">
         <div class="col-lg-1"></div>
         <div class="col-lg-11">
-          <form class="form-group" action="{{ url_for('login_page') }}" method="post">
+          <form class="form-group" action="{{ url_for('event_success') }}" method="post">
               <h2 class="form-group-heading">Create Event</h2>
               <div class="row">
                   <div class="col-lg-5">
                       <br>
-                        <label for="inputUsername">Activity Type</label>
-                        <select id="Activity" name="Gender" class="form-control" style="width:70%;">
+                        <label for="activity">Activity Type</label>
+                        <select id="activity" name="activity" class="form-control" style="width:70%;">
                             <option value="0">-Select-</option>
                             <option value="1">Running</option>
                             <option value="2">Walking</option>
@@ -34,20 +34,27 @@
                             <option value="2">Gym</option>
                         </select>
                         <br>
-                        <label for="inputPassword">City</label>
-                        <input type="text" name="city" id="inputPassword" class="form-control"  style="width:70%;" placeholder="City" required>
+                        <label for="city">City</label>
+                        <input type="text" name="city" id="city" class="form-control"  style="width:70%;" placeholder="City" required>
                         <br>
-                        <label for="inputPassword">Specific Location</label>
-                        <input type="text" name="location" id="inputPassword" class="form-control"  style="width:70%;" placeholder="Location" required>
+                        <label for="location">Specific Location</label>
+                        <input type="text" name="location" id="location" class="form-control"  style="width:70%;" placeholder="Location" required>
                         <br>
                   </div>
                   <div class="col-lg-5">
                       <br>
-                        <label for="inputUsername">Date and Time</label>
-                        <input type="text" name="text" id="inputUsername" class="form-control" placeholder="Date"  style="width:70%;" required autofocus>
+                        <label for="time">Date and Time</label>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <input type="date" name="date" id="date" class="form-control" placeholder="Date"  style="width:100%;" required autofocus>
+                            </div>
+                            <div class="col-lg-4">
+                                <input type="time" name="time" id="time" class="form-control" placeholder="Date"  style="width:100%;" required autofocus>
+                            </div>
+                        </div>
                         <br>
-                        <label for="inputPassword">Max Participants</label>
-                        <input type="password" name="text" id="inputPassword" class="form-control"  style="width:70%;" placeholder="Maximal number of Participants" required>
+                        <label for="max_part">Max Participants</label>
+                        <input type="number" min="0" name="max_part" id="max_part" class="form-control"  style="width:30%;" placeholder="" required>
                         <br>
                   </div>
                 </div>

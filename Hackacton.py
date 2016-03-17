@@ -143,6 +143,23 @@ def create_event():
     #     return redirect(url_for('login_page'))
 
 
+@app.route('/event_success', methods=['POST'])
+def event_success():
+    if session.get('logged_in'):
+        # Create the event
+        activity = '\'' + request.form['activity'] + '\''
+        city = '\'' + request.form['city'] + '\''
+        location = '\'' + request.form['location'] + '\''
+        time = '\'' + request.form['time'] + '\''
+        max_part = '\'' + request.form['max_part'] + '\''
+        user_id = session.get('user_id')
+
+
+        return render_template('event_success.html')
+    else:
+        return redirect(url_for('login_page'))
+
+
 if __name__ == '__main__':
     app.config.from_object(__name__)
     app.run()
