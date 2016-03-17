@@ -45,6 +45,7 @@ def my_events():
         events_data.append((city_name, specific_location, date, max_registers, activity, reg[3]))
     return render_template('my_events.html', events_data=events_data)
 
+
 @app.route('/', methods=['GET', 'POST'])
 def main():
     if session.get('logged_in'):
