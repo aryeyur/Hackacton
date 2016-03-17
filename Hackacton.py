@@ -33,6 +33,20 @@ def main():
     else:
         return redirect(url_for('login_page'))
 
+@app.route('/register_success', methods=['POST'])
+def register_success_handler():
+    name  = '\'' + request.form['Name'] + '\''
+    user_name ='\'' + request.form['Username'] + '\''
+    password = '\'' + request.form['Password'] + '\''
+    date_of_birth = '\'' + request.form['date_of_birth'] + '\''
+    gender = '\'' + request.form['Gender'] + '\''
+    email = '\'' + request.form['email'] + '\''
+    phone = '\'' + request.form['Phone Number'] + '\''
+    args = ','.join([name, user_name, password, date_of_birth, gender,email, phone])
+    query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
+    query_db2(query)
+    return render_template('register_success.html')
+
 
 @app.route('/login_page', methods=['GET', 'POST'])
 def login_page():
