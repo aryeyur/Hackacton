@@ -104,8 +104,9 @@ def login_page():
 
 @app.route('/profile')
 def profile():
-    # TODO Get username from session
-    user = query_db('SELECT * FROM Users WHERE UserName=\"max\"')
+    # Get username from session
+    username = session.get('username')
+    user = query_db('SELECT * FROM Users WHERE UserName=\"{}\"'.format(username))
     sports_ids = query_db('SELECT * FROM FaveActivities WHERE UserID=\"{}\"'.format(user[0][0]))
     activities = []
     for id in sports_ids:
@@ -118,6 +119,14 @@ def profile():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login_page'))
+
+
+@app.route('/createevent')
+def logout():
+    # if session.get('logged_in'):
+    return render_template('creae_event.html')
+    # else:
+    #     return redirect(url_for('login_page'))
 
 
 if __name__ == '__main__':
