@@ -181,13 +181,16 @@ def event_success():
     if session.get('logged_in'):
         # Create the event
         activity = '\'' + request.form['activity'] + '\''
-        city = '\'' + request.form['city'] + '\''
+        city_id = '\'' + request.form['city'] + '\''
         location = '\'' + request.form['location'] + '\''
+        date = '\'' + request.form['date'] + '\''
         time = '\'' + request.form['time'] + '\''
         max_part = '\'' + request.form['max_part'] + '\''
         user_id = session.get('user_id')
 
         return render_template('event_success.html')
+
+        #args = ','.join([city_id, location, ])
     else:
         return redirect(url_for('login_page'))
 
