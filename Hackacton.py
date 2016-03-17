@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-SECRET_KEY = 'development key'
+SECRET_KEY = 'development key222'
 
 
 def get_db():
@@ -32,24 +32,8 @@ def register():
     return render_template('register_page.html')
 
 
-@app.route('/my_events')
-def my_events():
-    events_data = []
-    registrations = query_db('SELECT * FROM Registrations WHERE UserID={}'.format(session.get('user_id')))
-    for reg in registrations:
-        event = query_db(' SELECT * FROM Events WHERE ID={}'.format(reg[1]))
-        city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(event[0][1]), one=True)[0]
-        specific_location = event[0][2]
-        date = event[0][3]
-        max_registers = event[0][4]
-        activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(event[0][5]), one=True)[0]
-        events_data.append((city_name, specific_location, date, max_registers, activity, reg[3]))
-    return render_template('my_events.html', events_data=events_data)
-
-
-@app.route('/')
-@app.route('/<activity_id_chosen>')
-def main(activity_id_chosen=None):
+@app.route('/', methods=['GET', 'POST'])
+def main():
     if session.get('logged_in'):
         cur = get_db().cursor()
 
@@ -63,12 +47,8 @@ def main(activity_id_chosen=None):
         activities_ids_and_names = zip(activities_ids, activities_names)
 
         user_preferences_string = ''
-        # if request.method == 'POST':
-        #     user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
-        tags = []
-        if activity_id_chosen is not None:
-            user_preferences_string = 'ActivityID = \'{}\''.format(activity_id_chosen)
-            tags = [c[0] for c in query_db('SELECT Tag FROM Tags WHERE ActivityID=\'{}\''.format(activity_id_chosen))]
+        if request.method == 'POST':
+            user_preferences_string = 'ActivityID = \'{}\''.format(request.form['activities'])
         else:
             user_preferences_strings = []
             for preference in activities_ids:
@@ -87,17 +67,15 @@ def main(activity_id_chosen=None):
                 current_users.append(
                     query_db('SELECT UserName from Users WHERE ID=\'{}\''.format(current_user_id), one=True)[0])
 
-            event_id = events[i][0]
             city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(events[i][1]), one=True)[0]
             specific_location = events[i][2]
             date = events[i][3]
             max_registers = events[i][4]
             activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(events[i][5]), one=True)[0]
 
-            events_data.append((city_name, specific_location, date, max_registers, activity, current_users, event_id))
+            events_data.append((city_name, specific_location, date, max_registers, activity, current_users))
 
-        return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names,
-                               tags=tags)
+        return render_template('main.html', events_data=events_data, activities_ids_and_names=activities_ids_and_names)
     else:
         return redirect(url_for('login_page'))
 
@@ -114,7 +92,7 @@ def register_success_handler():
     city = '\'' + request.form['favourite_cities'] + '\''
     args = ','.join([name, user_name, password, date_of_birth, gender, email, phone])
     query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
-    query_db_no_return_value(query)
+    query_db2(query)
     select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
     user_id = query_db(select_user_query)[0][0]
     insert_city(city, user_id)
@@ -130,16 +108,16 @@ def register_success_handler():
 def insert_activity(activity_id, user_id):
     args = ','.join([str(user_id), activity_id])
     query = 'INSERT INTO FaveActivities (UserID, ActivityID) VALUES ({})'.format(args)
-    query_db_no_return_value(query)
+    query_db2(query)
 
 
 def insert_city(city_id, user_id):
     args = ','.join([str(user_id), str(city_id)])
     query = 'INSERT INTO RelevantCities (UserID, CityID) VALUES ({})'.format(args)
-    query_db_no_return_value(query)
+    query_db2(query)
 
 
-def query_db_no_return_value(query, args=(), one=False):
+def query_db2(query, args=(), one=False):
     db = get_db()
     db.execute(query, args)
     db.commit()
@@ -213,12 +191,12 @@ def event_tags():
         date_time = "\'{} {}\'".format(date, time + ':00')
         args = ','.join([city_id, location, date_time, max_part, activity])
         query = 'INSERT INTO Events (CityID, Location, DateAndTime, MaxRegisters, ActivityID) VALUES ({})'.format(args)
-        query_db_no_return_value(query)
+        query_db2(query)
         event_id = query_db('SELECT ID FROM Events ORDER BY ID DESC LIMIT 1')[0][0]
         # Add user as creator and participant
         args = ','.join([str(user_id), str(event_id), '1'])
         query = 'INSERT INTO Registrations (UserID, EventID, Creator) VALUES ({})'.format(args)
-        query_db_no_return_value(query)
+        query_db2(query)
 
         # Get relevant tags fot the activity type
         tags = query_db('SELECT * FROM Tags WHERE ActivityID={}'.format(activity))
@@ -236,20 +214,12 @@ def event_success():
         checked_tags = request.form.getlist('checked_tags')
         #add event tags to DB
         for tag in checked_tags:
-            args = ','.join([str(event_id), str(tag)])
-            query = 'INSERT INTO EventsTags (EventID, TagID) VALUES ({})'.format(args)
-            query_db_no_return_value(query)
+        args = ','.join([str(user_id), str(event_id), '1'])
+        query = 'INSERT INTO EventsTags (EventID, TagID) VALUES ({})'.format(args)
+        query_db2(query)
         return render_template('event_success.html')
     else:
         return redirect(url_for('login_page'))
-
-
-@app.route('/register_to_event/<event_id>')
-def register_to_event(event_id):
-    query_db_no_return_value(
-        'INSERT INTO Registrations (UserID, EventID, Creator) VALUES ({}, {}, {})'.format(session.get('user_id'),
-                                                                                          event_id, 0))
-    return redirect(url_for('main'))
 
 
 if __name__ == '__main__':
