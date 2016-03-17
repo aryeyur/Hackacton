@@ -33,6 +33,7 @@ def main():
     else:
         return redirect(url_for('login_page'))
 
+
 @app.route('/register_success', methods=['POST'])
 def register_success_handler():
     name  = '\'' + request.form['Name'] + '\''
@@ -56,6 +57,8 @@ def login_page():
     error = None
     if request.method == 'POST':
         cur = get_db().cursor()
+        temp_str = 'SELECT Password FROM Users WHERE UserName=\'{}\''.format(request.form['username'])
+
         password = query_db('SELECT Password FROM Users WHERE UserName=\'{}\''.format(request.form['username']),
                             one=True)
 
@@ -68,6 +71,7 @@ def login_page():
             return redirect(url_for('main'))
     return render_template('login_page.html', error=error)
 
+
 @app.route('/profile')
 def profile():
     # TODO Get username from session
@@ -78,6 +82,12 @@ def profile():
         # Get the activities names according to their ids.
         activities.append(query_db('SELECT Name FROM Activities WHERE ID=\'{}\''.format(id[2]))[0][0])
     return render_template('profile.html', user=user, activities=activities)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('logged_in', None)
+    return redirect(url_for('login_page'))
 
 
 if __name__ == '__main__':

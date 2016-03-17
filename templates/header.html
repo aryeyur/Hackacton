@@ -44,6 +44,9 @@
             <li class="active"><a href="#">Home</a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="#contact">Contact</a></li>
+            {% if session.logged_in %}
+              <li><a href="{{ url_for('logout') }}">logout</a></li>
+  {% endif %}
           </ul>
         </div><!-- /.nav-collapse -->
       </div><!-- /.container -->
