@@ -26,6 +26,9 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+@app.route('/register')
+def register():
+    return render_template('register_page.html')
 
 @app.route('/')
 def main():
