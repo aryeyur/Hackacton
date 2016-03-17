@@ -44,6 +44,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="/profile">Profile</a></li>
             <li><a href="#contact">Contact</a></li>
+            <li><a href="/register">Register</a></li>
             {% if session.logged_in %}
               <li><a href="{{ url_for('logout') }}">logout</a></li>
             {% endif %}
