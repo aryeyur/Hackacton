@@ -1,3 +1,6 @@
+{% extends "header.html" %}
+
+{% block body %}
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
@@ -7,7 +10,7 @@
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
-<form class="form-horizontal" action='' method="POST">
+<form class="form-horizontal" action='/register_success' method="POST">
   <fieldset>
     <div id="legend">
       <legend class="">Registration Page</legend>
@@ -23,18 +26,18 @@
     <div class="control-group">
       <label class="control-label" for="Username">Username</label>
       <div class="controls">
-        <input type="text" id="name" name="Name" placeholder="" class="input-xlarge name">
+        <input type="text" id="name" name="Username" placeholder="" class="input-xlarge username">
       </div>
     <div class="control-group">
       <label class="control-label" for="Password">Password</label>
       <div class="controls">
-        <input type="text" id="password" name="Password" placeholder="" class="input-xlarge password">
+        <input type="password" id="password" name="Password" placeholder="" class="input-xlarge password">
       </div>
 
         <div class="control-group">
-      <label class="control-label" for="Date Of Birth">Date Of Birth (In the form of yyyy/mm/dd)</label>
+      <label class="control-label" for="Date_Of_Birth">Date Of Birth (In the form of yyyy/mm/dd)</label>
       <div class="controls">
-        <input type="text" id="date of birth" name="date of birth" placeholder="" class="input-xlarge date of birth">
+        <input type="text" id="date_of_birth" name="date_of_birth" placeholder="" class="input-xlarge date of birth">
       </div>
 
 
@@ -52,9 +55,9 @@
     </div>
 
      <div class="control-group">
-      <label class="control-label" for="E-mail Address">E-mail Address</label>
+      <label class="control-label" for="email">E-mail Address</label>
       <div class="controls">
-         <input type="text" id="E-mail" name="E-mail address" placeholder="" class="input-xlarge E-mail address">
+         <input type="text" id="email" name="email" placeholder="" class="input-xlarge E-mail address">
       </div>
 
       <br class="control-group">
@@ -66,8 +69,10 @@
     <div class="control-group">
       <!-- Button -->
       <div class="controls">
-        <button class="btn btn-success">Register</button>
+        <button type="submit">register</button>
       </div>
     </div>
   </fieldset>
 </form>
+
+{%endblock%}
