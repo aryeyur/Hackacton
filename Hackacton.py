@@ -46,7 +46,20 @@ def register_success_handler():
     args = ','.join([name, user_name, password, date_of_birth, gender,email, phone])
     query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
     query_db2(query)
+    select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
+    user_id = query_db(select_user_query)[0][0]
+    insert_activity('1',user_id) if request.form.get('running')=='on'else None # should return 'on'
+    insert_activity('2',user_id) if request.form.get('walking') == 'on' else None
+    insert_activity('3',user_id) if request.form.get('basketball')== 'on' else None
+    insert_activity('4',user_id) if request.form.get('soccer')=='on' else None
+    insert_activity('5',user_id) if request.form.get('tennis')=='on' else None
+    insert_activity('6',user_id) if request.form.get('gym')=='on' else None
     return render_template('register_success.html')
+
+def insert_activity(activity_id, user_id):
+    args = ','.join([str(user_id),activity_id])
+    query = 'INSERT INTO FaveActivities (UserID, ActivityID) VALUES ({})'.format(args)
+    query_db2(query)
 
 def query_db2(query, args=(), one=False):
     db = get_db()
