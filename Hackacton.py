@@ -48,6 +48,10 @@ def register_success_handler():
     query_db2(query)
     return render_template('register_success.html')
 
+def query_db2(query, args=(), one=False):
+    db = get_db()
+    db.execute(query,args)
+    db.commit()
 
 @app.route('/login_page', methods=['GET', 'POST'])
 def login_page():
