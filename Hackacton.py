@@ -68,6 +68,7 @@ def login_page():
             error = "password doesn't match user name"
         else:
             session['logged_in'] = True
+            session['username'] = request.form['username']
             return redirect(url_for('main'))
     return render_template('login_page.html', error=error)
 
