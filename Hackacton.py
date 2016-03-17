@@ -183,14 +183,19 @@ def event_success():
         activity = '\'' + request.form['activity'] + '\''
         city_id = '\'' + request.form['city'] + '\''
         location = '\'' + request.form['location'] + '\''
-        date = '\'' + request.form['date'] + '\''
-        time = '\'' + request.form['time'] + '\''
+        date = request.form['date']
+        time = request.form['time']
         max_part = '\'' + request.form['max_part'] + '\''
         user_id = session.get('user_id')
-
         return render_template('event_success.html')
 
         #args = ','.join([city_id, location, ])
+        date_time = "\'{} {}\'".format(date, time+':00')
+        args = ','.join([city_id, location, date_time, max_part, activity])
+        query = 'INSERT INTO Events (CityID, Location, DateAndTime, MaxRegisters, ActivityID) VALUES ({})'.format(args)
+        query_db2(query)
+        return render_template('event_success.html')
+
     else:
         return redirect(url_for('login_page'))
 
