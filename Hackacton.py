@@ -26,21 +26,32 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+
 @app.route('/register')
 def register():
     return render_template('register_page.html')
+
 
 @app.route('/')
 def main():
     if session.get('logged_in'):
         cur = get_db().cursor()
-        user_preferences_strings = []
 
-        for preference in query_db(
-                'SELECT ActivityID FROM FaveActivities WHERE UserID=\'{}\''.format(session.get('user_id'))):
-            user_preferences_strings.append('ActivityID = \'{}\''.format(preference[0]))
+        activities_ids = query_db(
+            'SELECT ActivityID FROM FaveActivities WHERE UserID=\'{}\''.format(session.get('user_id')))
 
-        user_preferences_string = ' OR '.join(user_preferences_strings)
+        activities_names = [
+            query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(current_activity_id[0]), one=True)[0] for
+            current_activity_id in activities_ids]
+
+        user_preferences_string = ''
+        if request.method == 'POST':
+            user_preferences_string = 'ActivityID = \'{}\''.format()
+        else:
+            user_preferences_strings = []
+            for preference in activities_ids:
+                user_preferences_strings.append('ActivityID = \'{}\''.format(preference[0]))
+            user_preferences_string = ' OR '.join(user_preferences_strings)
 
         events = query_db('SELECT * FROM Events WHERE ' + user_preferences_string)
 
@@ -63,42 +74,44 @@ def main():
 
             events_data.append((city_name, specific_location, date, max_registers, activity, current_users))
 
-        return render_template('main.html', events_data=events_data)
+        return render_template('main.html', events_data=events_data, activities_names=activities_names)
     else:
         return redirect(url_for('login_page'))
 
 
 @app.route('/register_success', methods=['POST'])
 def register_success_handler():
-    name  = '\'' + request.form['Name'] + '\''
-    user_name ='\'' + request.form['Username'] + '\''
+    name = '\'' + request.form['Name'] + '\''
+    user_name = '\'' + request.form['Username'] + '\''
     password = '\'' + request.form['Password'] + '\''
     date_of_birth = '\'' + request.form['date_of_birth'] + '\''
     gender = '\'' + request.form['Gender'] + '\''
     email = '\'' + request.form['email'] + '\''
     phone = '\'' + request.form['Phone Number'] + '\''
     city = '\'' + request.form['favourite_cities'] + '\''
-    args = ','.join([name, user_name, password, date_of_birth, gender,email, phone])
+    args = ','.join([name, user_name, password, date_of_birth, gender, email, phone])
     query = 'INSERT INTO Users (Name, UserName, Password, Age, Gender, Email, Phone) VALUES ({})'.format(args)
     query_db2(query)
     select_user_query = 'SELECT * FROM Users WHERE UserName={}'.format(user_name)
     user_id = query_db(select_user_query)[0][0]
-    insert_city(city,user_id)
-    insert_activity('1',user_id) if request.form.get('running')=='on'else None # should return 'on'
-    insert_activity('2',user_id) if request.form.get('walking') == 'on' else None
-    insert_activity('3',user_id) if request.form.get('basketball')== 'on' else None
-    insert_activity('4',user_id) if request.form.get('soccer')=='on' else None
-    insert_activity('5',user_id) if request.form.get('tennis')=='on' else None
-    insert_activity('6',user_id) if request.form.get('gym')=='on' else None
+    insert_city(city, user_id)
+    insert_activity('1', user_id) if request.form.get('running') == 'on'else None  # should return 'on'
+    insert_activity('2', user_id) if request.form.get('walking') == 'on' else None
+    insert_activity('3', user_id) if request.form.get('basketball') == 'on' else None
+    insert_activity('4', user_id) if request.form.get('soccer') == 'on' else None
+    insert_activity('5', user_id) if request.form.get('tennis') == 'on' else None
+    insert_activity('6', user_id) if request.form.get('gym') == 'on' else None
     return render_template('register_success.html')
 
+
 def insert_activity(activity_id, user_id):
-    args = ','.join([str(user_id),activity_id])
+    args = ','.join([str(user_id), activity_id])
     query = 'INSERT INTO FaveActivities (UserID, ActivityID) VALUES ({})'.format(args)
     query_db2(query)
 
-def insert_city(city_id,user_id):
-    args = ','.join([str(user_id),str(city_id)])
+
+def insert_city(city_id, user_id):
+    args = ','.join([str(user_id), str(city_id)])
     query = 'INSERT INTO RelevantCities (UserID, CityID) VALUES ({})'.format(args)
     query_db2(query)
 
@@ -173,7 +186,6 @@ def event_success():
         time = '\'' + request.form['time'] + '\''
         max_part = '\'' + request.form['max_part'] + '\''
         user_id = session.get('user_id')
-
 
         return render_template('event_success.html')
     else:
