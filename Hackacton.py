@@ -37,7 +37,7 @@ def my_events():
     events_data = []
     registrations = query_db('SELECT * FROM Registrations WHERE UserID={}'.format(session.get('user_id')))
     for reg in registrations:
-        event = query_db(' SELECT * FROM Events WHERE ID={}'.format(reg[1]))
+        event = query_db(' SELECT * FROM Events WHERE ID={}'.format(reg[2]))
         city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(event[0][1]), one=True)[0]
         specific_location = event[0][2]
         date = event[0][3]
@@ -234,7 +234,7 @@ def event_success():
 
         event_id = request.form['event_id']
         checked_tags = request.form.getlist('checked_tags')
-        #add event tags to DB
+        # add event tags to DB
         for tag in checked_tags:
             args = ','.join([str(event_id), str(tag)])
             query = 'INSERT INTO EventsTags (EventID, TagID) VALUES ({})'.format(args)
