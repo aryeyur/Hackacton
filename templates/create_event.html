@@ -2,92 +2,64 @@
 
 
 {% block body %}
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
 
-                <!-- General Unify Forms -->
-                <form action="#" class="sky-form">
-                    <header>General Unify Forms</header>
 
-                    <fieldset>
-                        <section>
-                            <label class="label">Text input</label>
-                            <label class="input">
-                                <input type="text">
-                            </label>
-                        </section>
 
-                        <section>
-                            <label class="label">File input</label>
-                            <label for="file" class="input input-file">
-                                <div class="button"><input type="file" id="file" onchange="this.parentNode.nextSibling.value = this.value">Browse</div><input type="text" readonly>
-                            </label>
-                        </section>
+<div class="container panel-success">
+    <div class="row">
+        <div class="col-lg-1"></div>
+        <div class="col-lg-11">
+          <form class="form-group" action="{{ url_for('login_page') }}" method="post">
+              <h2 class="form-group-heading">Create Event</h2>
+              <div class="row">
+                  <div class="col-lg-5">
+                      <br>
+                        <label for="inputUsername">Activity Type</label>
+                        <select id="Activity" name="Gender" class="form-control" style="width:70%;">
+                            <option value="0">-Select-</option>
+                            <option value="1">Running</option>
+                            <option value="2">Walking</option>
+                            <option value="2">Basketball</option>
+                            <option value="2">Soccer</option>
+                            <option value="2">Tennis</option>
+                            <option value="2">Gym</option>
+                        </select>
+                        <br>
+                        <label for="inputPassword">City</label>
+                        <input type="text" name="city" id="inputPassword" class="form-control"  style="width:70%;" placeholder="City" required>
+                        <br>
+                        <label for="inputPassword">Specific Location</label>
+                        <input type="text" name="location" id="inputPassword" class="form-control"  style="width:70%;" placeholder="Location" required>
+                        <br>
+                  </div>
+                  <div class="col-lg-5">
+                      <br>
+                        <label for="inputUsername">Date and Time</label>
+                        <input type="text" name="text" id="inputUsername" class="form-control" placeholder="Date"  style="width:70%;" required autofocus>
+                        <br>
+                        <label for="inputPassword">Max Participants</label>
+                        <input type="password" name="text" id="inputPassword" class="form-control"  style="width:70%;" placeholder="Maximal number of Participants" required>
+                        <br>
+                  </div>
+                </div>
+                <input class="btn btn-lg btn-primary btn-block" type="submit" value="Create" style="width:40%;">
 
-                        <section>
-                            <label class="label">Input with autocomlete</label>
-                            <label class="input">
-                                <input type="text" list="list">
-                                <datalist id="list">
-                                    <option value="Alexandra"></option>
-                                    <option value="Alice"></option>
-                                    <option value="Anastasia"></option>
-                                    <option value="Avelina"></option>
-                                    <option value="Basilia"></option>
-                                    <option value="Beatrice"></option>
-                                    <option value="Cassandra"></option>
-                                    <option value="Cecil"></option>
-                                    <option value="Clemencia"></option>
-                                    <option value="Desiderata"></option>
-                                    <option value="Dionisia"></option>
-                                    <option value="Edith"></option>
-                                    <option value="Eleanora"></option>
-                                    <option value="Elizabeth"></option>
-                                    <option value="Emma"></option>
-                                    <option value="Felicia"></option>
-                                    <option value="Florence"></option>
-                                    <option value="Galiana"></option>
-                                    <option value="Grecia"></option>
-                                    <option value="Helen"></option>
-                                    <option value="Helewisa"></option>
-                                    <option value="Idonea"></option>
-                                    <option value="Isabel"></option>
-                                    <option value="Joan"></option>
-                                    <option value="Juliana"></option>
-                                    <option value="Karla"></option>
-                                    <option value="Karyn"></option>
-                                    <option value="Kate"></option>
-                                    <option value="Lakisha"></option>
-                                    <option value="Lana"></option>
-                                    <option value="Laura"></option>
-                                    <option value="Leona"></option>
-                                    <option value="Mandy"></option>
-                                    <option value="Margaret"></option>
-                                    <option value="Maria"></option>
-                                    <option value="Nanacy"></option>
-                                    <option value="Nicole"></option>
-                                    <option value="Olga"></option>
-                                    <option value="Pamela"></option>
-                                    <option value="Patricia"></option>
-                                    <option value="Qiana"></option>
-                                    <option value="Rachel"></option>
-                                    <option value="Ramona"></option>
-                                    <option value="Samantha"></option>
-                                    <option value="Sandra"></option>
-                                    <option value="Tanya"></option>
-                                    <option value="Teresa"></option>
-                                    <option value="Ursula"></option>
-                                    <option value="Valerie"></option>
-                                    <option value="Veronica"></option>
-                                    <option value="Wilma"></option>
-                                    <option value="Yasmin"></option>
-                                    <option value="Zelma"></option>
-                                </datalist>
-                            </label>
-                            <div class="note"><strong>Note:</strong> works in Chrome, Firefox, Opera and IE10.</div>
-                        </section>
-                    </fieldset>
+          </form>
+        </div>
+        <div class="col-lg-5">
 
-                </form>
+        </div>
+    </div>
+</div> <!-- /container -->
 
 
 {% endblock %}

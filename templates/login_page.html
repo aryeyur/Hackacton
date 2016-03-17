@@ -20,15 +20,24 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
 
     <div class="container">
+        <div class="row">
+            <div class="col-lg-1"></div>
+            <div class="col-lg-6">
       {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
       <form class="form-signin" action="{{ url_for('login_page') }}" method="post">
         <h2 class="form-signin-heading">Please sign in</h2>
+        <br>
         <label for="inputUsername" class="sr-only">Email address</label>
-        <input type="username" name="username" id="inputUsername" class="form-control" placeholder="Username" required autofocus>
+        <input type="username" name="username" id="inputUsername" class="form-control" placeholder="Username"  style="width:60%;" required autofocus>
+        <br>
         <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required>
-        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login"></input>
+        <input type="password" name="password" id="inputPassword" class="form-control"  style="width:60%;" placeholder="Password" required>
+        <br>
+        <input class="btn btn-lg btn-primary btn-block" type="submit" value="Login" style="width:60%;"></input>
       </form>
+                </div>
+        <img src="/static/images/running.gif">
+        </div>
     </div> <!-- /container -->
 
 
