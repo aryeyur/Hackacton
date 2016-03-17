@@ -106,7 +106,7 @@ def login_page():
 def profile():
     # TODO Get username from session
     user = query_db('SELECT * FROM Users WHERE UserName=\"max\"')
-    sports_ids = query_db('SELECT * FROM FaveActivities WHERE UserID=\"1\"')
+    sports_ids = query_db('SELECT * FROM FaveActivities WHERE UserID=\"{}\"'.format(user[0][0]))
     activities = []
     for id in sports_ids:
         # Get the activities names according to their ids.
