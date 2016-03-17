@@ -193,8 +193,8 @@ def event_success():
         query_db2(query)
         event_id = query_db('SELECT ID FROM Events ORDER BY ID DESC LIMIT 1')
         # Add user as creator and participant
-        args = ','.join([user_id, event_id])
-        query = 'INSERT INTO Registrations (UserID, EventID) VALUES ({})'.format(args)
+        args = ','.join([user_id, event_id, "True"])
+        query = 'INSERT INTO Registrations (UserID, EventID, Creatorr) VALUES ({})'.format(args)
         query_db2(query)
         return render_template('event_success.html')
 
