@@ -34,17 +34,20 @@ def register():
 
 @app.route('/my_events')
 def my_events():
-    events_data = []
-    registrations = query_db('SELECT * FROM Registrations WHERE UserID={}'.format(session.get('user_id')))
-    for reg in registrations:
-        event = query_db(' SELECT * FROM Events WHERE ID={}'.format(reg[2]))
-        city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(event[0][1]), one=True)[0]
-        specific_location = event[0][2]
-        date = event[0][3]
-        max_registers = event[0][4]
-        activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(event[0][5]), one=True)[0]
-        events_data.append((city_name, specific_location, date, max_registers, activity, reg[3]))
-    return render_template('my_events.html', events_data=events_data)
+    if session.get('logged_in'):
+        events_data = []
+        registrations = query_db('SELECT * FROM Registrations WHERE UserID={}'.format(session.get('user_id')))
+        for reg in registrations:
+            event = query_db(' SELECT * FROM Events WHERE ID={}'.format(reg[2]))
+            city_name = query_db('SELECT Name from Cities WHERE ID=\'{}\''.format(event[0][1]), one=True)[0]
+            specific_location = event[0][2]
+            date = event[0][3]
+            max_registers = event[0][4]
+            activity = query_db('SELECT Name from Activities WHERE ID=\'{}\''.format(event[0][5]), one=True)[0]
+            events_data.append((city_name, specific_location, date, max_registers, activity, reg[3]))
+        return render_template('my_events.html', events_data=events_data)
+    else:
+        return redirect(url_for('login_page'))
 
 
 @app.route('/')
@@ -214,10 +217,10 @@ def logout():
 
 @app.route('/create_event')
 def create_event():
-    # if session.get('logged_in'):
-    return render_template('create_event.html')
-    # else:
-    #     return redirect(url_for('login_page'))
+    if session.get('logged_in'):
+        return render_template('create_event.html')
+    else:
+        return redirect(url_for('login_page'))
 
 
 @app.route('/event_tags', methods=['POST'])

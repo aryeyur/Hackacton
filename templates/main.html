@@ -12,7 +12,7 @@
           <p class="pull-right visible-xs">
             <button type="button" class="btn btn-primary btn-xs" data-toggle="offcanvas">Toggle nav</button>
           </p>
-          <div class="jumbotron">
+          <div class="jumbotron" style="width:90%">
               <div class="btn-toolbar-justified" data-toggle="buttons">
                       {% for activity_id_and_name in activities_ids_and_names %}
                         <label class="btn btn-primary btn-lg" style="width:30%;" value="{{activity_id_and_name[0]}}"
@@ -25,6 +25,8 @@
               </div>
           </div>
           <div class="row">
+              <div class="col-lg-1"></div>
+              <div class="col-lg-9">
               {% for current_event_data in events_data %}
                    <div class="list-group">
                     <h2>{{current_event_data[4]}}</h2>
@@ -58,6 +60,7 @@
                       <h2>No events</h2>
                    </div><!--/.list-group-->
               {% endfor %}
+                  </div>
           </div><!--/row-->
         </div><!--/.col-xs-12.col-sm-9-->
         <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar">
