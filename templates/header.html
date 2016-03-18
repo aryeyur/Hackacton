@@ -45,7 +45,7 @@
             <li><a href="/">Home</a></li>
             <li><a href="{{ url_for('profile') }}">Profile</a></li>
             <li><a href="{{ url_for('create_event') }}">Create Event</a></li>
-            <li><a href="{{ url_for('my_events') }}">My events</a></li>
+            <li><a href="{{ url_for('my_events') }}">My Events</a></li>
             {% if session.logged_in %}
               <li><a href="{{ url_for('logout') }}">logout</a></li>
             {% else %}
