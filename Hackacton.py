@@ -3,7 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
-SECRET_KEY = 'development key'
+SECRET_KEY = 'development key3'
 
 
 def get_db():
